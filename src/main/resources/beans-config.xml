@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+     http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- bean definitions here -->
     <bean id="s1" class="com.mycompany.springbase1102.di.Student">
@@ -13,5 +17,117 @@
         <property name="name" value="Marry" />
         <property name="age" value="20" />
     </bean>
+    <!-- 使用 p 命名空間方法注入 -->
+    <bean id="s4" 
+          class="com.mycompany.springbase1102.di.Student"
+          p:name="Tom"
+          p:age="20"
+    />
+    <!-- 使用 c 命名空間建構子注入 -->
+    <bean id="s5" 
+          class="com.mycompany.springbase1102.di.Student"
+          c:name="Jo"
+          c:age="21"
+    />
+    <bean id="t1" class="com.mycompany.springbase1102.di.Teacher" c:name="Happy"/>
+    <bean id="s7" class="com.mycompany.springbase1102.di.Student">
+        <property name="name" value="Go" />
+        <property name="age" value="27" />
+        <property name="teacher" ref="t1" />
+    </bean>
     
+    <bean id="t2" class="com.mycompany.springbase1102.di.Teacher"/>
+    <bean id="s8" class="com.mycompany.springbase1102.di.Student">
+        <property name="name" value="Go" />
+        <property name="age" value="27" />
+        <property name="teacher" ref="t2" />
+        
+        <property name="teacher.name" value="aaa"/>
+    </bean>
+    
+    <bean id="s9" class="com.mycompany.springbase1102.di.Student">
+        <property name="name" value="諸葛" />
+        <property name="age" value="27" />
+        <property name="teacher">
+            <bean class="com.mycompany.springbase1102.di.Teacher" c:name="劉備" />
+        </property>
+    </bean>    
+    <!-- 集合注入 LIST-->
+    <bean id="t3" class="com.mycompany.springbase1102.di.Teacher">
+        <property name="name" value="Helen" />
+        <property name="cls">
+            <list>
+                <value>甲班</value>
+                <value>乙班</value>
+            </list>    
+        </property>
+        <property name="students">
+            <set>
+                <ref bean="s1"/>
+                <ref bean="s2"/>
+                <ref bean="s9"/>
+            </set>
+        </property>
+        <property name="subjects">
+            <map>
+                <entry>
+                    <key>
+                        <value>國文</value>
+                    </key>
+                    <value>3</value>
+                </entry>
+                <entry>
+                    <key>
+                        <value>數學</value>
+                    </key>
+                    <value>2</value>
+                </entry>
+                <entry>
+                    <key>
+                        <value>英文</value>
+                    </key>
+                    <value>1</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    <util:set id="students">
+        <ref bean="s1" />
+        <ref bean="s5" />
+        <ref bean="s7" />
+    </util:set>
+    <bean id="t4" class="com.mycompany.springbase1102.di.Teacher">
+        <property name="name" value="Helen" />
+        <property name="students" ref="students" />
+    </bean>
+    
+    <!--工廠模式-->
+    <bean id="lotto" class="com.mycompany.springbase1102.di.LottoFactory" />
+    <!-- bean 的作用域 scope : prototype, singleton, request, session-->
+    <bean id="lotto2" 
+          class="com.mycompany.springbase1102.di.Lotto"
+          scope ="singleton"
+          c:amount="5"
+          c:begin="1"
+          c:end="39"
+    />
+    <util:set id="nums">
+        <value>1</value>
+        <value>2</value>
+        <value>3</value>
+        <value>4</value>
+        <value>5</value>
+    </util:set>
+        
+    <bean id="lotto3" 
+          class="com.mycompany.springbase1102.di.Lotto"
+          scope ="singleton"
+          p:amount="5"
+          p:begin="1"
+          p:end="39">
+        <property name="nums" ref="nums"/>
+    </bean>
+    
+ 
+       
 </beans>
